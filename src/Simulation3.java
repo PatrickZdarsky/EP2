@@ -38,37 +38,17 @@ public class Simulation3 {
                 BodyLinkedList collidingBodies = bodies.removeCollidingWith(body);
                 int size = collidingBodies == null ? 0 : collidingBodies.size();
                 if (size > 1) {
+                    //Merge bodies
                     for (int j = 0; j < size; j++) {
                         Body otherBody = collidingBodies.get(j);
                         if (otherBody != body) {
                             body = body.merge(otherBody);
                         }
                     }
-
-                    // since the body index i changed size there might be new collisions
-                    // at all positions of bodies, so start all over again
-                //    i = -1;   Todo: This is broken!
                 }
-                bodies.addLast(body);
 
-//                for (int j = i + 1; j < Simulation.NUMBER_OF_BODIES; j++) {
-//                    Body otherBody = bodies.get(j);
-//
-//                    if (body.distanceTo(otherBody) <
-//                            body.radius() + otherBody.radius()) {
-//                        bodies[i] = bodies[i].merge(bodies[j]);
-//                        Body[] bodiesOneRemoved = new Body[bodies.length - 1];
-//                        for (int k = 0; k < bodiesOneRemoved.length; k++) {
-//                            bodiesOneRemoved[k] = bodies[k < j ? k : k + 1];
-//                        }
-//                        bodies = bodiesOneRemoved;
-//
-//                        // since the body index i changed size there might be new collisions
-//                        // at all positions of bodies, so start all over again
-//                        i = -1;
-//                        j = bodies.length;
-//                    }
-//                }
+                //removeCollidingWith also removes the body which was given to check, so re-add it here
+                bodies.addLast(body);
             }
 
             // for each body: compute the total force exerted on it.
@@ -86,34 +66,6 @@ public class Simulation3 {
                     }
                 }
             }
-
-
-
-            //Create copies since we are losing the objects when traversing through the queue
-//            BodyQueue loopQueue = new BodyQueue(bodies);
-//            BodyQueue otherBodies = new BodyQueue(bodies);
-//            Body body, otherBody;
-//            while((body = loopQueue.poll()) != null) {
-//                forceOnBody.put(body, new Vector3()); // begin with zero
-//
-//                //Use our queue like a ring-buffer in order not to waste so many objects
-//                //Get the first body, in order to check when we have looped
-//                Body firstBody = otherBodies.poll();
-//                otherBody = firstBody;
-//                do {
-//                    if (body != otherBody) {
-//                        Vector3 forceToAdd = body.gravitationalForce(otherBody);
-//
-//                        forceOnBody.put(body, forceOnBody.get(body).plus(forceToAdd));
-//                    }
-//                    //Re-add the body since it has been removed by the loop advancement
-//                    otherBodies.add(otherBody);
-//
-//                    //Get the next body and break the loop if we have reached the first body
-//                } while ((otherBody = otherBodies.poll()) != firstBody);
-//                //Re-add the first body since we have removed it by checking the next body
-//                otherBodies.add(firstBody);
-//            }
 
             // for each body: move it according to the total force exerted on it.
             for (int i = 0; i < size; i++) {

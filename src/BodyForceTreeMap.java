@@ -70,18 +70,17 @@ public class BodyForceTreeMap {
     // Returns a readable representation of this map, in which key-value pairs are ordered
     // descending according to the mass of the bodies.
     public String toString() {
-        //Check if we are a leaf => return our value
-        if (right == null && left == null)
-            return key + " => " + value;
-
         String s = "";
+        //Add the right one since it is the highest
+        if (right!= null)
+            s = right + "\n";
 
-        //Todo: the root of the tree is missing, but I don't know how to check if we are the root node :c
+        //Now add ourself
+        s += key + " => " + value;
 
+        //Finally add the left
         if (left != null)
-            s = left.toString();// + "\n";
-        if (right != null)
-            s = right.toString() + "\n" + s;
+            s += "\n" + left;
 
         return s;
     }
