@@ -82,6 +82,10 @@ public class Body {
         this.massCenter.drawAsFilledCircle(cd, SpaceDraw.massToRadius(this.mass));
     }
 
+    public double mass() {
+        return mass;
+    }
+
     // Returns a string with the information about this body including
     // mass, position (mass center) and current movement. Example:
     // "5.972E24 kg, position: [1.48E11,0.0,0.0] m, movement: [0.0,29290.0,0.0] m/s."
