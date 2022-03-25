@@ -95,18 +95,21 @@ public class Simulation {
 
             // for each body: compute the total force exerted on it.
             BodyQueue loopQueue = new BodyQueue(bodies);
+            BodyQueue otherBodies = new BodyQueue(bodies);
             Body body, otherBody;
             while((body = loopQueue.poll()) != null) {
                 forceOnBody.put(body, new Vector3()); // begin with zero
 
-                BodyQueue otherBodies = new BodyQueue(bodies);
-                while ((otherBody = otherBodies.poll()) != null) {
+                Body firstBody = otherBodies.poll();
+                otherBody = firstBody;
+                do {
                     if (body != otherBody) {
                         Vector3 forceToAdd = body.gravitationalForce(otherBody);
 
                         forceOnBody.put(body, forceOnBody.get(body).plus(forceToAdd));
                     }
-                }
+                    otherBodies.add(otherBody);
+                } while ((otherBody = otherBodies.poll()) != firstBody);
             }
 
             // for each body: move it according to the total force exerted on it.
@@ -122,10 +125,6 @@ public class Simulation {
                 cd.clear(Color.BLACK);
 
                 // draw new positions
-//                Body body;
-//                while ((body = bodyQueue.poll()) != null)
-//                    body.draw(cd);
-
                 loopQueue = new BodyQueue(bodies);
                 while((body = loopQueue.poll()) != null) {
                     body.draw(cd);
