@@ -100,6 +100,8 @@ public class Simulation {
             while((body = loopQueue.poll()) != null) {
                 forceOnBody.put(body, new Vector3()); // begin with zero
 
+                //Use our queue like a ring-buffer in order not to waste so many objects
+                //Get the first body, in order to check when we have looped
                 Body firstBody = otherBodies.poll();
                 otherBody = firstBody;
                 do {
@@ -108,8 +110,13 @@ public class Simulation {
 
                         forceOnBody.put(body, forceOnBody.get(body).plus(forceToAdd));
                     }
+                    //Re-add the body since it has been removed by the loop advancement
                     otherBodies.add(otherBody);
+
+                    //Get the next body and break the loop if we have reached the first body
                 } while ((otherBody = otherBodies.poll()) != firstBody);
+                //Re-add the first body since we have removed it by checking the next body
+                otherBodies.add(firstBody);
             }
 
             // for each body: move it according to the total force exerted on it.
