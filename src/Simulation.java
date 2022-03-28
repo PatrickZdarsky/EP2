@@ -73,6 +73,11 @@ public class Simulation {
         while (true) {
             seconds++; // each iteration computes the movement of the celestial bodies within one second.
 
+            //Übungstest 1
+            Body checkBody = new Body(1.989e30,new Vector3(0,0,0),new Vector3(0,0,0));
+            System.out.println("Minimal distance: " + checkBody.getMinimalDistance(new BodyQueue(bodies)));
+
+
             // merge bodies that have collided
 //          ==> Comment because of assignment 4
 //            for (int i = 0; i < bodies.length; i++) {
