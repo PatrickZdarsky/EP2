@@ -15,6 +15,20 @@ public class Body {
         this.currentMovement = currentMovement;
     }
 
+    public double getMinimalDistance(BodyQueue bodies) {
+        double minValue = Double.MAX_VALUE;
+        Body other;
+        while ((other = bodies.poll()) != null) {
+            if (other != this) {
+                double distance = distanceTo(other);
+                if (distance < minValue)
+                    minValue = distance;
+            }
+        }
+
+        return minValue;
+    }
+
     // Returns the distance between the mass centers of this body and the specified body 'b'.
     public double distanceTo(Body b) {
         return massCenter.distanceTo(b.massCenter);
