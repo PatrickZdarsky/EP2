@@ -77,6 +77,9 @@ public class BodyForceMap {
             keys[i] = null;
             values[i] = null;
         }
+
+        //Update number of keys in map
+        size = size-right;
     }
 
     // Returns the value associated with the specified key, i.e. the returns the force vector
