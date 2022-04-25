@@ -135,6 +135,16 @@ public class MyListNode {
         return next.get(--i);
     }
 
+    public MyListNode getNode(int i) {
+        if (i == 0)
+            return this;
+        return next.getNode(--i);
+    }
+
+    void setNext(MyListNode node) {
+        this.next = node;
+    }
+
     // Returns the index of the first occurrence of the specified element in this list, or -1 if
     // this list does not contain the element.
     public int indexOf(Body body) {

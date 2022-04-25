@@ -20,6 +20,18 @@ public class BodyLinkedList {
         headNode = listNode;
     }
 
+    public void removeSubList(int fromIndex, int toIndex) {
+        if (toIndex <= fromIndex || fromIndex < 0 || fromIndex >= size())
+            return;
+
+        MyListNode fromNode = headNode.getNode(fromIndex);
+        MyListNode toNode = headNode.getNode(toIndex);
+
+        fromNode.setNext(toNode);
+    }
+
+
+
     // Inserts the specified element 'body' at the beginning of this list.
     public void addFirst(Body body) {
         if (headNode == null)
