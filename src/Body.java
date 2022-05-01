@@ -100,6 +100,10 @@ public class Body {
         return mass;
     }
 
+    public Vector3 massCenter() {
+        return massCenter;
+    }
+
     // Returns a string with the information about this body including
     // mass, position (mass center) and current movement. Example:
     // "5.972E24 kg, position: [1.48E11,0.0,0.0] m, movement: [0.0,29290.0,0.0] m/s."

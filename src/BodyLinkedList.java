@@ -106,4 +106,11 @@ public class BodyLinkedList {
     public int size() {
         return headNode == null ? 0 : headNode.size();
     }
+
+    public void addAll(BodyLinkedList other) {
+        int size = other.size();
+        for (int i = 0; i < size; i++) {
+            addLast(other.get(i));
+        }
+    }
 }
