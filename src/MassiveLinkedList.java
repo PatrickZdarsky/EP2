@@ -2,12 +2,10 @@
 // The number of elements of the list is not limited.
 public class MassiveLinkedList {
 
-    //TODO: declare variables.
+    private GenericLinkedListNode<Massive> head, tail;
 
     // Initializes 'this' as an empty list.
     public MassiveLinkedList() {
-
-        //TODO: define constructor.
     }
 
     // Initializes 'this' as an independent copy of the specified list 'list'.
@@ -15,81 +13,126 @@ public class MassiveLinkedList {
     // and vice versa.
     // Precondition: list != null.
     public MassiveLinkedList(BodyLinkedList list) {
-
-        //TODO: define constructor.
+        var size = list.size();
+        for (int i = 0; i < size; i++) {
+            addLast(list.get(i));
+        }
     }
 
     // Inserts the specified element 'body' at the beginning of this list.
     public void addFirst(Massive body) {
-
-        //TODO: implement method.
+        if (head == null) {
+            head = new GenericLinkedListNode<>(body);
+            tail = head;
+        } else {
+            head = head.appendBefore(body);
+        }
     }
 
     // Appends the specified element 'body' to the end of this list.
     public void addLast(Massive body) {
-
-        //TODO: implement method.
+        if (tail == null) {
+            //This list is empty
+            addFirst(body);
+        } else {
+            tail = tail.appendAfter(body);
+        }
     }
 
     // Returns the last element in this list.
     // Returns 'null' if the list is empty.
     public Massive getLast() {
-
-        //TODO: implement method.
-        return null;
+        if (tail == null)
+            return null;
+        return tail.getValue();
     }
 
     // Returns the first element in this list.
     // Returns 'null' if the list is empty.
     public Massive getFirst() {
+        if (head == null)
+            return null;
 
-        //TODO: implement method.
-        return null;
+        return head.getValue();
     }
 
     // Retrieves and removes the first element in this list.
     // Returns 'null' if the list is empty.
     public Massive pollFirst() {
+        if (head == null)
+            return null; //List is empty
 
-        //TODO: implement method.
-        return null;
+        var value = head.getValue();
+        if (head == tail) {
+            //this list only has one element
+            head = null;
+            tail = null;
+
+            return value;
+        }
+        head = head.remove();
+
+        return value;
     }
 
     // Retrieves and removes the last element in this list.
     // Returns 'null' if the list is empty.
     public Massive pollLast() {
+        if (tail == null)
+            return null; //List is empty
 
-        //TODO: implement method.
-        return null;
+        var value = tail.getValue();
+        if (head == tail) {
+            //this list only has one element
+            head = null;
+            tail = null;
+
+            return value;
+        }
+
+        tail = tail.remove();
+
+        return value;
     }
 
     // Inserts the specified element at the specified position in this list.
     // Precondition: i >= 0 && i <= size().
     public void add(int i, Massive m) {
+        if (head == null) {
+            if (i != 0)
+                throw new IndexOutOfBoundsException();
+            addFirst(m);
+        }
 
-        //TODO: implement method.
+        head.add(i, m);
+
+        //Check if the tail is still correct
+        if (tail.getNext() != null)
+            tail = tail.getNext();
     }
 
     // Returns the element at the specified position in this list.
     // Precondition: i >= 0 && i < size().
     public Massive get(int i) {
+        if (head == null)
+            throw new IndexOutOfBoundsException();
 
-        //TODO: implement method.
-        return null;
+        return head.get(i);
     }
 
     // Returns the index of the first occurrence of the specified element in this list, or -1 if
     // this list does not contain the element.
     public int indexOf(Massive m) {
+        if (head == null)
+            throw new IndexOutOfBoundsException();
 
-        //TODO: implement method.
-        return -2;
+        return head.indexOf(m);
     }
 
     // Returns the number of elements in this list.
     public int size() {
-
-        //TODO: implement method.
-        return -1;
+        if (head == null)
+            return 0;
+        return head.size();
     }
 }

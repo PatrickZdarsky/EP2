@@ -3,7 +3,7 @@ import codedraw.CodeDraw;
 import java.awt.*;
 
 // This class represents celestial bodies like stars, planets, asteroids, etc..
-public class Body {
+public class Body implements Massive {
 
     private double mass;
     private Vector3 massCenter; // position of the mass center.
@@ -52,6 +52,7 @@ public class Body {
     // on it, and updates the current movement accordingly.
     // (Movement depends on the mass of this body, its current movement and the exerted force.)
     // Hint: see simulation loop in Simulation.java to find out how this is done.
+    @Override
     public void move(Vector3 force) {
         Vector3 newPosition = currentMovement.plus(
                     massCenter.plus(force.times(1 / mass)));
@@ -68,6 +69,7 @@ public class Body {
     // Returns the approximate radius of this body.
     // (It is assumed that the radius r is related to the mass m of the body by r = m ^ 0.5,
     // where m and r measured in solar units.)
+    @Override
     public double radius() {
         return SpaceDraw.massToRadius(mass);
     }
@@ -96,10 +98,12 @@ public class Body {
         this.massCenter.drawAsFilledCircle(cd, SpaceDraw.massToRadius(this.mass));
     }
 
+    @Override
     public double mass() {
         return mass;
     }
 
+    @Override
     public Vector3 massCenter() {
         return massCenter;
     }
@@ -107,6 +111,7 @@ public class Body {
     // Returns a string with the information about this body including
     // mass, position (mass center) and current movement. Example:
     // "5.972E24 kg, position: [1.48E11,0.0,0.0] m, movement: [0.0,29290.0,0.0] m/s."
+    @Override
     public String toString() {
         return String.format("%e kg, position: %s m, movement: %s m/s", mass, massCenter, currentMovement);
     }
