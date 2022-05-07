@@ -1,7 +1,9 @@
 import codedraw.CodeDraw;
 
 import java.awt.*;
+import java.util.Arrays;
 import java.util.Random;
+import java.util.stream.StreamSupport;
 
 // Simulates the formation of a massive solar system.
 //
@@ -25,8 +27,8 @@ public class Simulation5 {
     // set some system parameters
     public static final double SECTION_SIZE = 10 * AU; // the size of the square region in space
 
-    public static final int NUMBER_OF_BODIES = 22;
-    public static final double OVERALL_SYSTEM_MASS = 20 * SUN_MASS; // kilograms
+    public static final int NUMBER_OF_BODIES = 8;
+    public static final double OVERALL_SYSTEM_MASS = 1 * SUN_MASS; // kilograms
 
     // all quantities are based on units of kilogram respectively second and meter.
 
@@ -61,8 +63,42 @@ public class Simulation5 {
                     new Vector3(0 + random.nextGaussian() * 5e3, 0 + random.nextGaussian() * 5e3, 0 + random.nextGaussian() * 5e3));
         }
 
-        //TODO: implementation of this method according to 'Aufgabenblatt5.md'.
-        //  Add both, NamedBody- and Body-objects, to your simulation.
 
+        var map = new MassiveForceHashMap();
+        Arrays.stream(bodies).forEach(body -> map.put(body, new Vector3()));
+        map.put(sun, new Vector3());
+        map.put(earth, new Vector3());
+        map.put(moon, new Vector3());
+        map.put(mars, new Vector3());
+        map.put(deimos, new Vector3());
+        map.put(phobos, new Vector3());
+        map.put(mercury, new Vector3());
+        map.put(venus, new Vector3());
+        map.put(vesta, new Vector3());
+        map.put(pallas, new Vector3());
+        map.put(hygiea, new Vector3());
+        map.put(ceres, new Vector3());
+
+        for (int seconds = 0; true; seconds++){
+            for (var massive : map.keyList()) {
+                map.put(massive, new Vector3()); // begin with zero
+
+                for (var otherMassive : map.keyList()) {
+                    if (massive != otherMassive) {
+                        Vector3 forceToAdd = massive.gravitationalForce(otherMassive);
+
+                        map.put(massive, map.get(massive).plus(forceToAdd));
+                    }
+                }
+            }
+            StreamSupport.stream(map.keyList().spliterator(), false).forEach(massive -> massive.move(map.get(massive)));
+
+            if(seconds % 3600 == 0){
+
+                cd.clear(Color.BLACK);
+                StreamSupport.stream(map.keyList().spliterator(), false).forEach(massive -> massive.draw(cd));
+                cd.show();
+            }
+        }
     }
 }

@@ -1,6 +1,9 @@
+import java.util.Collections;
+import java.util.Iterator;
+
 // A list of massive objects implemented as a linked list.
 // The number of elements of the list is not limited.
-public class MassiveLinkedList {
+public class MassiveLinkedList implements Iterable<Massive>{
 
     private GenericLinkedListNode<Massive> head, tail;
 
@@ -134,5 +137,10 @@ public class MassiveLinkedList {
         if (head == null)
             return 0;
         return head.size();
+    }
+
+    @Override
+    public Iterator<Massive> iterator() {
+        return head != null ? head.iterator() : Collections.emptyIterator();
     }
 }

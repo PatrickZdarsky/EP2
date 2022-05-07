@@ -1,7 +1,9 @@
+import java.util.Iterator;
+
 /**
  * @author Patrick Zdarsky / Rxcki
  */
-public class GenericLinkedListNode<T> {
+public class GenericLinkedListNode<T> implements Iterable<T>{
 
     private T value;
 
@@ -124,5 +126,40 @@ public class GenericLinkedListNode<T> {
         if (i == 0)
             return value;
         return next.get(--i);
+    }
+
+    @Override
+    public Iterator<T> iterator() {
+        return new LinkedListIterator(this);
+    }
+
+    public class LinkedListIterator implements Iterator<T> {
+
+        private boolean traversed = false;
+        private final GenericLinkedListNode<T> node;
+        private Iterator<T> next;
+
+        public LinkedListIterator(GenericLinkedListNode<T> node) {
+            this.node = node;
+        }
+
+        @Override
+        public boolean hasNext() {
+            if (!traversed)
+                return node.getValue() != null;
+
+            return next != null && next.hasNext();
+        }
+
+        @Override
+        public T next() {
+            if (!traversed) {
+                next = node.next != null ? node.next.iterator() : null;
+                traversed = true;
+                return node.getValue();
+            }
+
+            return next != null ? next.next() : null;
+        }
     }
 }

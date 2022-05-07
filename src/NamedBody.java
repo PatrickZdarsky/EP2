@@ -54,4 +54,14 @@ public class NamedBody implements Massive {
     public void move(Vector3 force) {
         body.move(force);
     }
+
+    @Override
+    public double mass() {
+        return body.mass();
+    }
+
+    @Override
+    public Vector3 massCenter() {
+        return body.massCenter();
+    }
 }
