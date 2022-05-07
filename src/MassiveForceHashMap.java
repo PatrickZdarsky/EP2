@@ -77,6 +77,7 @@ public class MassiveForceHashMap {
     public String toString() {
         return "MassiveForceHashMap {\n" +
                 Arrays.stream(table)
+                        .filter(Objects::nonNull)
                         .map(entry -> entry.getKey() + " => " + entry.getValue()).collect(Collectors.joining("\n")) +
                 "\n}";
     }
