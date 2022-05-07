@@ -69,6 +69,9 @@ public class MassiveForceHashMap {
 
     // Returns 'true' if this map contains a mapping for the specified key.
     public boolean containsKey(Massive key) {
+        if (key == null)
+            return false;
+
         return table[find(key)] != null;
     }
 
