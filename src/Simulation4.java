@@ -51,6 +51,8 @@ public class Simulation4 {
         CosmicSystem solarSystem = new HierarchicalSystem(sun, mercury, venus, earthSystem,
                 marsSystem, vesta, pallas, hygiea, ceres);
 
+        solarSystem.markCentralBodies();
+        System.out.println(solarSystem);
         for (int seconds = 0; true; seconds++){
 
             solarSystem.addForceTo(solarSystem);

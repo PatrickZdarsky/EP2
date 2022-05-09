@@ -84,6 +84,13 @@ public class HierarchicalSystem implements CosmicSystem {
     }
 
     @Override
+    public void markCentralBodies() {
+        centerBody.setName("Central "+centerBody.getName());
+
+        subsystems.forEach(CosmicSystem::markCentralBodies);
+    }
+
+    @Override
     public void draw(CodeDraw cd) {
         centerBody.draw(cd);
 

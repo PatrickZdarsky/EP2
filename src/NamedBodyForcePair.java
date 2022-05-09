@@ -20,7 +20,10 @@ public class NamedBodyForcePair implements CosmicSystem {
     // Returns the name of the body.
     public String getName() {
         return name;
+    }
 
+    public void setName(String name) {
+        this.name = name;
     }
 
     @Override
@@ -66,6 +69,11 @@ public class NamedBodyForcePair implements CosmicSystem {
     public void update() {
         body.move(appliedForce);
         appliedForce = new Vector3();
+    }
+
+    @Override
+    public void markCentralBodies() {
+
     }
 
     @Override
