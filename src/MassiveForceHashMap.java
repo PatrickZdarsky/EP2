@@ -23,15 +23,40 @@ public class MassiveForceHashMap {
     private int find (Massive key) {
          if (key == null) return table.length - 1;
          int i = key.hashCode() & (table.length - 2);
-         while (table[i] != null && !table[i].getKey().equals(key))
-             i = (i + 1) & (table.length - 2);
+         while (table[i] != null && !table[i].getKey().equals(key)) {
+             i = (i + 1);
+
+             //If collisions until the end, wrap to top
+             if (i == table.length)
+                 i = 0;
+         }
          return i;
+    }
+
+    public boolean halveCapacity() {
+        if (getCapacity() / 2 < count)
+            return false;
+
+        var oldTable = table;
+
+        table = new GenericKeyValuePair[getCapacity()/2];
+
+        for (var entry : oldTable) {
+            if (entry != null)
+                put(entry.getKey(), entry.getValue(), false);
+        }
+
+        return true;
+    }
+
+    public Vector3 put(Massive key, Vector3 value) {
+        return put(key, value, true);
     }
 
     // Adds a new key-value association to this map. If the key already exists in this map,
     // the value is replaced and the old value is returned. Otherwise 'null' is returned.
     // Precondition: key != null.
-    public Vector3 put(Massive key, Vector3 value) {
+    public Vector3 put(Massive key, Vector3 value, boolean resize) {
         if (key == null)
             return null;
 
@@ -42,7 +67,7 @@ public class MassiveForceHashMap {
             table[index] = new GenericKeyValuePair<>(key, value);
             keyList.addLast(key);
 
-            if (++count >= LOAD_FACTOR * table.length) {
+            if (++count >= LOAD_FACTOR * table.length && resize) {
                 //We have to resize the array and re-order the entries within it
                 var oldEntries = table;
                 table = new GenericKeyValuePair[(table.length << 1) - 1];
@@ -73,6 +98,10 @@ public class MassiveForceHashMap {
             return false;
 
         return table[find(key)] != null;
+    }
+
+    public int getCapacity() {
+        return table.length;
     }
 
     // Returns a readable representation of this map, with all key-value pairs. Their order is not
