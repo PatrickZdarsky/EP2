@@ -116,5 +116,9 @@ public class Body implements Massive {
         return String.format("%e kg, position: %s m, movement: %s m/s", mass, massCenter, currentMovement);
     }
 
+    @Override
+    public int compareTo(Massive o) {
+        return (int) (mass - o.mass());
+    }
 }
 

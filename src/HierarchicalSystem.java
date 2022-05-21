@@ -1,6 +1,7 @@
 import codedraw.CodeDraw;
 
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -8,7 +9,7 @@ import java.util.stream.Collectors;
 // and an arbitrary number of subsystems (of type 'HierarchicalSystem') in its orbit.
 // This class implements 'CosmicSystem'.
 //
-public class HierarchicalSystem implements CosmicSystem {
+public class HierarchicalSystem implements CosmicSystem, MassiveIterable {
 
     private NamedBodyForcePair centerBody;
 
@@ -101,5 +102,60 @@ public class HierarchicalSystem implements CosmicSystem {
     public String toString() {
         return centerBody.getName() + " {" + subsystems.stream().map(CosmicSystem::toString)
                 .collect(Collectors.joining(", ")) + "}";
+    }
+
+    @Override
+    public MassiveIterator iterator() {
+        return new HierarchicalSystemIterator(this);
+    }
+
+    public class HierarchicalSystemIterator implements MassiveIterator {
+
+        private final HierarchicalSystem system;
+
+        MassiveIterator currentIterator;
+
+        private byte index = 0;
+        private Massive next;
+
+        public HierarchicalSystemIterator(HierarchicalSystem system) {
+            this.system = system;
+
+            next = system.centerBody;
+        }
+
+        private Massive retrieveNext() {
+            if (currentIterator != null) {
+                if (currentIterator.hasNext()) {
+                    return currentIterator.next();
+                }
+                currentIterator = null;
+            }
+
+            if (index >= system.subsystems.size())
+                return null;
+
+            var nextSystem = system.subsystems.get(index++);
+            
+            if (nextSystem instanceof Massive)
+                return (Massive) nextSystem;
+
+            currentIterator = ((HierarchicalSystem) nextSystem).iterator();
+
+            return currentIterator != null ? currentIterator.next() : null;
+        }
+
+        @Override
+        public Massive next() {
+            var currentNext = next;
+            next = retrieveNext();
+
+            return currentNext;
+        }
+
+        @Override
+        public boolean hasNext() {
+            return next != null;
+        }
     }
 }

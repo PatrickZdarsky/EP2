@@ -1,7 +1,7 @@
 // Represents a coherent mass with a mass center in 3D space. Has two naming schemes for its
 // methods. Please, do not change this interface definition!
 //
-public interface Massive extends Drawable {
+public interface Massive extends Drawable, Comparable<Massive> {
 
     // Returns the mass.
     default double mass() {

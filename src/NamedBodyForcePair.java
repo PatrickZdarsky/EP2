@@ -3,7 +3,7 @@ import codedraw.CodeDraw;
 // A body with a name and an associated force. The leaf node of
 // a hierarchical cosmic system. This class implements 'CosmicSystem'.
 //
-public class NamedBodyForcePair implements CosmicSystem {
+public class NamedBodyForcePair implements CosmicSystem, Massive {
 
     private String name;
     private Body body;
@@ -29,6 +29,11 @@ public class NamedBodyForcePair implements CosmicSystem {
     @Override
     public Vector3 getMassCenter() {
         return body.massCenter();
+    }
+
+    @Override
+    public void move(Vector3 force) {
+        body.move(force);
     }
 
     @Override
@@ -84,5 +89,10 @@ public class NamedBodyForcePair implements CosmicSystem {
     @Override
     public String toString() {
         return getName();
+    }
+
+    @Override
+    public int compareTo(Massive o) {
+        return body.compareTo(o);
     }
 }

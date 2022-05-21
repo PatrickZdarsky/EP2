@@ -64,4 +64,9 @@ public class NamedBody implements Massive {
     public Vector3 massCenter() {
         return body.massCenter();
     }
+
+    @Override
+    public int compareTo(Massive o) {
+        return (int) (mass() - o.mass());
+    }
 }

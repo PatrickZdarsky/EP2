@@ -39,5 +39,4 @@ public interface CosmicSystem extends Drawable {
     void update();
 
     void markCentralBodies();
-
 }

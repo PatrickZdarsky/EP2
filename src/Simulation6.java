@@ -2,6 +2,7 @@ import codedraw.CodeDraw;
 
 import java.awt.*;
 import java.util.Random;
+import java.util.stream.StreamSupport;
 
 // Simulates the formation of a massive solar system.
 //
@@ -64,5 +65,36 @@ public class Simulation6 {
         //TODO: implementation of this method according to 'Aufgabenblatt6.md'.
         //  Add both, NamedBody- and Body-objects, to your simulation.
 
+        var treeMap = new MassiveForceTreeMap();
+        treeMap.put(sun, null);
+        treeMap.put(earth, null);
+        treeMap.put(moon, null);
+
+        for (Body body : bodies) {
+            treeMap.put(body, null);
+        }
+
+
+        for (int seconds = 0; true; seconds++){
+            for (var massive : treeMap.getKeys()) {
+                treeMap.put(massive, new Vector3()); // begin with zero
+
+                for (var otherMassive : treeMap.getKeys()) {
+                    if (massive != otherMassive) {
+                        Vector3 forceToAdd = massive.gravitationalForce(otherMassive);
+
+                        treeMap.put(massive, treeMap.get(massive).plus(forceToAdd));
+                    }
+                }
+            }
+            StreamSupport.stream(treeMap.getKeys().spliterator(), false).forEach(massive -> massive.move(treeMap.get(massive)));
+
+            if(seconds % 3600 == 0){
+
+                cd.clear(Color.BLACK);
+                StreamSupport.stream(treeMap.getKeys().spliterator(), false).forEach(massive -> massive.draw(cd));
+                cd.show();
+            }
+        }
     }
 }
