@@ -15,6 +15,10 @@ public class NamedBody implements Massive {
         body = new Body(mass, massCenter, currentMovement);
     }
 
+    public void setState(Vector3 position, Vector3 velocity) {
+        body.setState(position, velocity);
+    }
+
     // Returns the name of the body.
     public String getName() {
         return name;

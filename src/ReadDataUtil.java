@@ -1,4 +1,6 @@
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 public class ReadDataUtil {
 
@@ -20,8 +22,53 @@ public class ReadDataUtil {
     public static boolean readConfiguration(NamedBody b, String path, String day)
             throws IOException {
 
-            // TODO: implement this method.
-            return false;
+        var filePath = Path.of(path);
+        if (!Files.exists(filePath))
+            throw new StateFileNotFoundException(path);
+
+        try (var reader = Files.newBufferedReader(filePath)) {
+            //Read until $$SOE
+            while (reader.ready() && !reader.readLine().equals("$$SOE")) {
+            }
+
+            String line = null;
+            while (reader.ready()) {
+                line = reader.readLine();
+
+                var split = line.split(",");
+
+                //Check for invalid format
+                if (split.length != 8)
+                    throw new StateFileFormatException("Data not properly separated");
+
+                if (split[1].contains(day)) {
+                    //We have found the searched entry
+
+                    var x = Double.parseDouble(split[2]);
+                    var y = Double.parseDouble(split[3]);
+                    var z = Double.parseDouble(split[4]);
+                    var position = new Vector3(x, y, z);
+
+                    var vx = Double.parseDouble(split[5]) * 3600;
+                    var vy = Double.parseDouble(split[6]) * 3600;
+                    var vz = Double.parseDouble(split[7]) * 3600;
+                    var velocity = new Vector3(vx, vy, vz);
+
+                    b.setState(position, velocity);
+                    return true;
+                }
+
+
+                if (line.equals("$$EOE"))
+                    return false;
+            }
+
+            //Invalid file
+            if (line == null)
+                throw new StateFileFormatException("No data found");
+
         }
+        return false;
     }
+}
 

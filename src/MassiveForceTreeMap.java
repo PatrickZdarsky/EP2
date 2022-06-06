@@ -1,3 +1,5 @@
+import java.util.NoSuchElementException;
+
 // A map that associates an object of 'Massive' with a Vector3. The number of key-value pairs
 // is not limited.
 //
@@ -88,6 +90,11 @@ public class MassiveForceTreeMap implements MassiveIterable{
             @Override
             public boolean hasNext() {
                 return iterator.hasNext();
+            }
+
+            @Override
+            public void remove() {
+                iterator.remove();
             }
         };
     }

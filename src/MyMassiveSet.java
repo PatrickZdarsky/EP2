@@ -45,7 +45,7 @@ public class MyMassiveSet implements MassiveSet{
     public MassiveLinkedList toList() {
         var list = new MassiveLinkedList();
 
-        for (Massive massive : treeMap) {
+        for (Massive massive : this) {
             list.addLast(massive);
         }
 

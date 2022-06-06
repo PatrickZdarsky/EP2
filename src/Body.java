@@ -15,6 +15,11 @@ public class Body implements Massive {
         this.currentMovement = currentMovement;
     }
 
+    public void setState(Vector3 position, Vector3 velocity) {
+        this.massCenter = position;
+        this.currentMovement = velocity;
+    }
+
     public double getMinimalDistance(BodyQueue bodies) {
         double minValue = Double.MAX_VALUE;
         Body other;

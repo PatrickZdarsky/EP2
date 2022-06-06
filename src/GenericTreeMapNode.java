@@ -1,4 +1,5 @@
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 /**
  * @author Patrick Zdarsky / Rxcki
@@ -111,15 +112,18 @@ public class GenericTreeMapNode<K extends Comparable<K>, V> {
     }
 
     public GenericKeyValuePair<K, V> pullUp() {
-        if (right == null)
-            return null;
-
-        var oldEntry = entry;
-
-        entry = right.pullUp();
-        //Check if right has deleted itself
-        if (right.entry == null)
-            right = null;
+        GenericKeyValuePair<K, V> oldEntry = entry;
+        if (right != null) {
+            entry = right.pullUp();
+            //Check if right has deleted itself
+            if (right.entry == null)
+                right = null;
+        } else if (left != null) {
+            entry = left.pullUp();
+            //Check if left has deleted itself
+            if (left.entry == null)
+                left = null;
+        }
 
         return oldEntry;
     }
@@ -189,7 +193,9 @@ public class GenericTreeMapNode<K extends Comparable<K>, V> {
 
         private Iterator<K> iterator;
 
-        private K next;
+        private boolean currentIsRemoved;
+
+        private K current, next;
 
         public GenericTreeMapKeyIterator(GenericTreeMapNode<K, ?> node) {
             this.node = node;
@@ -199,6 +205,7 @@ public class GenericTreeMapNode<K extends Comparable<K>, V> {
 
 
         private K retrieveNext() {
+            currentIsRemoved = false;
             if (iterator != null) {
                 if (iterator.hasNext())
                     return iterator.next();
@@ -233,10 +240,22 @@ public class GenericTreeMapNode<K extends Comparable<K>, V> {
 
         @Override
         public K next() {
-            var currentNext = next;
+            current = next;
+            if (current == null)
+                throw new NoSuchElementException();
+
             next = retrieveNext();
 
-            return currentNext;
+            return current;
+        }
+
+        @Override
+        public void remove() {
+            if (currentIsRemoved)
+                throw new IllegalStateException("The current entry was already removed");
+
+            currentIsRemoved = true;
+            node.remove(current);
         }
     }
 }
