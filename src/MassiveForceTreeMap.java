@@ -48,7 +48,7 @@ public class MassiveForceTreeMap implements MassiveIterable{
         if (rootNode == null)
             return null;
 
-        var value = rootNode.remove(key);
+        var value = rootNode.remove(key, null);
 
         if (rootNode.isEmpty())
             rootNode = null;
@@ -80,11 +80,15 @@ public class MassiveForceTreeMap implements MassiveIterable{
     public MassiveIterator iterator() {
         return new MassiveIterator() {
 
-            GenericTreeMapNode<Massive, Vector3>.GenericTreeMapKeyIterator<Massive> iterator = rootNode.keyIterator();
+            GenericTreeMapNode<Massive, Vector3>.GenericTreeMapKeyIterator<Massive, Vector3> iterator = rootNode.keyIterator();
+
+            Massive current;
 
             @Override
             public Massive next() {
-                return iterator.next();
+                current = iterator.next();
+
+                return current;
             }
 
             @Override
@@ -94,7 +98,10 @@ public class MassiveForceTreeMap implements MassiveIterable{
 
             @Override
             public void remove() {
-                iterator.remove();
+                MassiveForceTreeMap.this.remove(current);
+
+                //restart from the same node since the entries have shifted
+                iterator = iterator.getNode().keyIterator();
             }
         };
     }

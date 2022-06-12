@@ -1,3 +1,4 @@
+import java.lang.annotation.Target;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
@@ -76,39 +77,67 @@ public class GenericTreeMapNode<K extends Comparable<K>, V> {
         return null;
     }
 
-    public V remove(K key) {
-        if (entry.getKey().equals(key)) {
-            //This node has to be removed
-            var value = entry.getValue();
-            entry = pullUp();
-
-            return value;
-        }
-
+    public V remove(K key, GenericTreeMapNode<K, V> parent) {
         if (entry.getKey().compareTo(key) > 0) {
-            if (right != null) {
-                var value = right.remove(key);
-
-                //Check if the node has deleted itself
-                if (right.entry == null)
-                    right = null;
-
-                return value;
-            }
+            //right
+            return right != null ? right.remove(key, this) : null;
+        } else if (entry.getKey().compareTo(key) < 0) {
+            //left
+            return left != null ? left.remove(key, this) : null;
         } else {
-            if (left != null) {
-                var value = left.remove(key);
+            //this
+            var removed = entry.getValue();
 
-                //Check if the node has deleted itself
-                if (left.entry == null)
-                    left = null;
-
-                return value;
+            if (left != null && right != null) {
+                entry = minKey();
+            } else if (parent.left == this) {
+                parent.left = (left != null) ? left : right;
+            } else if (parent.right == this) {
+                parent.right = (left != null) ? left : right;
             }
+
+            return removed;
         }
 
-        //The key is not in this tree
-        return null;
+//        if (entry.getKey().equals(key)) {
+//            //This node has to be removed
+//            var value = entry.getValue();
+//            entry = pullUp();
+//
+//            return value;
+//        }
+//
+//        if (entry.getKey().compareTo(key) > 0) {
+//            if (right != null) {
+//                var value = right.remove(key);
+//
+//                //Check if the node has deleted itself
+//                if (right.entry == null)
+//                    right = null;
+//
+//                return value;
+//            }
+//        } else {
+//            if (left != null) {
+//                var value = left.remove(key);
+//
+//                //Check if the node has deleted itself
+//                if (left.entry == null)
+//                    left = null;
+//
+//                return value;
+//            }
+//        }
+//
+//        //The key is not in this tree
+//        return null;
+    }
+
+    private GenericKeyValuePair<K, V> minKey() {
+        if (right == null)
+            return entry;
+
+        return right.minKey();
     }
 
     public GenericKeyValuePair<K, V> pullUp() {
@@ -181,23 +210,21 @@ public class GenericTreeMapNode<K extends Comparable<K>, V> {
         return count;
     }
 
-    public GenericTreeMapKeyIterator<K> keyIterator(){
+    public GenericTreeMapKeyIterator<K, V> keyIterator(){
         return new GenericTreeMapKeyIterator<>(this);
     }
 
-    public class GenericTreeMapKeyIterator<K extends Comparable<K>> implements Iterator<K> {
+    public class GenericTreeMapKeyIterator<K extends Comparable<K>, V> implements Iterator<K> {
 
-        private final GenericTreeMapNode<K, ?> node;
+        private final GenericTreeMapNode<K, V> node;
 
         private byte mode = 0;
 
         private Iterator<K> iterator;
 
-        private boolean currentIsRemoved;
-
         private K current, next;
 
-        public GenericTreeMapKeyIterator(GenericTreeMapNode<K, ?> node) {
+        public GenericTreeMapKeyIterator(GenericTreeMapNode<K, V> node) {
             this.node = node;
 
             next = node.getKey();
@@ -205,7 +232,6 @@ public class GenericTreeMapNode<K extends Comparable<K>, V> {
 
 
         private K retrieveNext() {
-            currentIsRemoved = false;
             if (iterator != null) {
                 if (iterator.hasNext())
                     return iterator.next();
@@ -249,13 +275,8 @@ public class GenericTreeMapNode<K extends Comparable<K>, V> {
             return current;
         }
 
-        @Override
-        public void remove() {
-            if (currentIsRemoved)
-                throw new IllegalStateException("The current entry was already removed");
-
-            currentIsRemoved = true;
-            node.remove(current);
+        public GenericTreeMapNode<K, V> getNode() {
+            return node;
         }
     }
 }

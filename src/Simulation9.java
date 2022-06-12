@@ -40,7 +40,7 @@ public class Simulation9 {
                 new Vector3(0, 0, 0));
         map.put(new NamedBody("Hygiea", 8.32E19, new Vector3(0, 0, 0), new Vector3(0, 0, 0)),
                 new Vector3(0, 0, 0));
-        map.put(new NamedBody("Ceres", 9.394E20, new Vector3(0, 0, 0), new Vector3(0, 0, 0)),
+        map.put(new NamedBody("Ceres1", 9.394E20, new Vector3(0, 0, 0), new Vector3(0, 0, 0)),
                 new Vector3(0, 0, 0));
 
 

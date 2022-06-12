@@ -44,14 +44,14 @@ public class ReadDataUtil {
                 if (split[1].contains(day)) {
                     //We have found the searched entry
 
-                    var x = Double.parseDouble(split[2]);
-                    var y = Double.parseDouble(split[3]);
-                    var z = Double.parseDouble(split[4]);
+                    var x = Double.parseDouble(split[2]) * 1000;
+                    var y = Double.parseDouble(split[3]) * 1000;
+                    var z = Double.parseDouble(split[4]) * 1000;
                     var position = new Vector3(x, y, z);
 
-                    var vx = Double.parseDouble(split[5]) * 3600;
-                    var vy = Double.parseDouble(split[6]) * 3600;
-                    var vz = Double.parseDouble(split[7]) * 3600;
+                    var vx = Double.parseDouble(split[5]) * 1000;
+                    var vy = Double.parseDouble(split[6]) * 1000;
+                    var vz = Double.parseDouble(split[7]) * 1000;
                     var velocity = new Vector3(vx, vy, vz);
 
                     b.setState(position, velocity);
